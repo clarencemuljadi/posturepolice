@@ -2,20 +2,47 @@ import React from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+import Checkbox from '@mui/material/Checkbox';
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+const textFieldStyle = { 
+  width: '100%', 
+  '.MuiInputBase-root': {
+    height: '80px',
+    borderRadius: '12px',
+  },
+  '.MuiOutlinedInput-input': {
+    fontSize: '28px' 
+  },
+  '.MuiInputLabel-root': {
+    fontSize: '28px', 
+  },
+  '.MuiInputLabel-shrink': {
+    fontSize: '24px', 
+  }
+};
+
 const Register = () => {
   return (
-    <div className='min-h-screen w-auto flex flex-col justify-center px-6 py-12 lg:px-8 bg-bground'>
-        <div className='flex flex-col border-4 border-double rounded-lg px-10 h-full py-20 self-center'>
-            <div className='flex flex-col self-center gap-6 w-4/7'>
-              <h1 className='text-6xl text-center font-bold mb-10 px-0 py-0'>Register</h1>
-              <TextField id="name" label="Full Name" variant="outlined"/>
-              <TextField id="email" label="Email Address" variant="outlined" />
-              <TextField id="password" label="Password" variant="outlined" />
-              <TextField id="confirm" label="Confirm Password" variant="outlined" />
-              <Button className="bg-button-color" variant="contained"><span className='py-1 normal-case text-2xl'>Create Account</span></Button>
-              <h6 className='text-center text-xs'>By signing up, you agree to the <b>Terms of Service</b> and <b>Privacy Policy</b></h6>
-            </div>
-          </div>
+    <div className="min-h-screen flex justify-center items-center bg-slate-100">
+      <div className='flex flex-col h-fit w-1/3 max-w-screen-sm min-w-fit bg-bground px-12 py-16 gap-3 rounded-3xl shadow-2xl'>
+        <div className='mb-8'>
+          <h1 className='text-6xl font-bold mb-2'>Sign Up</h1>
+        </div>
+        <div className=' flex flex-col items-center justify-start gap-8'>
+          <TextField sx={textFieldStyle} id="name" label="Full Name" variant="outlined"/>
+          <TextField sx={textFieldStyle} id="email" label="Email Address" variant="outlined"/>
+          <TextField sx={textFieldStyle} id="password" label="Password" variant="outlined"/>
+          <TextField sx={textFieldStyle} id="email" label="Confirm Password" variant="outlined"/>
+        </div>
+        <div className='flex items-center'>
+          <Checkbox {...label} sx={{color:'#3da9fc', padding: '2px', '&.Mui-checked': {color: '#3da9fc',},}}/>
+          <p className='m-2 text-xl'>I accept the <b>Terms and Conditions</b></p>
+        </div>
+        <Button sx={{width: "100%", padding: "22px", borderRadius: "12px", background:'#3da9fc'}}variant="contained"><p className='normal-case font-bold text-2xl'>Create an account</p></Button>
+        <p className='text-xl'>Already have an account? <b className='text-button-color hover:text-blue-900'>Login here</b></p>
+      </div>
     </div>
   )
 }
