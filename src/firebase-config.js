@@ -33,16 +33,16 @@ function logSlouch(userID) {
 }
 
 async function signUp(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    setDoc(doc(db, "users", user.uid), {
+
+    await setDoc(doc(db, "users", user.uid), {
       email
     });
-  })
-  .catch((error) => {
-    console.error(error)
-  });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function logIn(email, password) {
