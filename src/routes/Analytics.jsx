@@ -3,6 +3,7 @@ import { LineChart } from "@mui/x-charts";
 const Analytics = () => {
   return (
     <LineChart
+      className="h-screen flex items-center justify-center"
       xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
       series={[
         {
