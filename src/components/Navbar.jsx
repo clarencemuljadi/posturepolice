@@ -10,7 +10,7 @@ const Navbar = () => {
         <DrawerExample></DrawerExample>
       </div>
       <div className="flex self-center">
-        <Link to="/dashboard">
+        <Link to="/">
           <div className="flex gap-2">
             <h1 className="text-3xl font-semibold tracking-wider mr-16 md:mr-0 text-head-color">
               Posture Police
@@ -23,7 +23,7 @@ const Navbar = () => {
       </div>
       <div className="flex items-center justify-between my-auto">
         <div className="gap-6 hidden md:flex">
-          <Link to="/profile">
+          <Link to="/Profile">
             <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
               <p
                 className="text-lg font-bold  text-head-color
@@ -36,7 +36,7 @@ const Navbar = () => {
               </div>
             </div>
           </Link>
-          <Link to="/login">
+          <Link to="/Analytics">
             <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
               <p
                 className="text-lg font-bold text-head-color
