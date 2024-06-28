@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore, doc, setDoc
+  getFirestore, doc, getDoc, setDoc, updateDoc
 } from 'firebase/firestore';
 import {
   getAuth,
@@ -35,7 +35,7 @@ async function logSlouch(userID) {
     const userDocRef = doc(db, 'users', userID);
     const userDoc = await getDoc(userDocRef);
 
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       throw new Error("User document does not exist");
     }
 
