@@ -1,27 +1,25 @@
-import { LineChart } from "@mui/x-charts";
+import { LineChart } from "@mui/x-charts/LineChart";
 
-const Analytics = () => {
+const dates = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const xLabels = [
+  "Page A",
+  "Page B",
+  "Page C",
+  "Page D",
+  "Page E",
+  "Page F",
+  "Page G",
+];
+
+export default function Analytics() {
   return (
-    <div className="flex flex-col min-h-screen p-4">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-center mt-4 sm:mt-10">
-          Michael Elijah
-        </h1>
-      </div>
-      <div className="flex justify-center items-center flex-grow">
-        <div className="w-full max-w-[800px] sm:w-[600px] sm:h-[400px] lg:w-[800px] lg:h-[500px]">
-          <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-            series={[
-              {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
-              },
-            ]}
-          />
-        </div>
-      </div>
+    <div>
+      <LineChart
+        width={500}
+        height={300}
+        series={[{ data: dates }]}
+        xAxis={[{ scaleType: "point", data: xLabels }]}
+      />
     </div>
   );
-};
-
-export default Analytics;
+}
