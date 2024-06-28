@@ -2,10 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import Analytics from "./routes/Analytics.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import "./index.css";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/Dashboard" />,
+  },
   {
     path: "/Login",
     element: <div>Hello world!</div>,
