@@ -10,7 +10,7 @@ const Navbar = () => {
         <DrawerExample></DrawerExample>
       </div>
       <div className="flex self-center">
-        <Link to="/">
+        <Link to="/dashboard">
           <div className="flex gap-2">
             <h1 className="text-3xl font-semibold tracking-wider mr-16 md:mr-0 text-head-color">
               Posture Police
