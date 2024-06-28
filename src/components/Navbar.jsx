@@ -16,7 +16,7 @@ const Navbar = () => {
               Posture Police
             </h1>
             <LocalHospitalIcon
-              sx={{ fontSize: 35, color: "#ef4565" }}
+              sx={{ fontSize: 38, color: "#ef4565" }}
             ></LocalHospitalIcon>
           </div>
         </Link>
