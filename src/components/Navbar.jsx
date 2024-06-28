@@ -35,7 +35,7 @@ const Navbar = () => {
               <PersonOutlineIcon></PersonOutlineIcon>
             </div>
           </Link>
-          <Link to="/profile">
+          <Link to="/analytics">
             <div className="flex gap-2">
               <p
                 className="text-md font-bold text-head-color
