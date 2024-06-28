@@ -1,4 +1,3 @@
-import React from "react";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { Link } from "react-router-dom";
 import DrawerExample from "./Drawer";
@@ -11,7 +10,7 @@ const Navbar = () => {
         <DrawerExample></DrawerExample>
       </div>
       <div className="flex self-center">
-        <Link to="/main">
+        <Link to="/">
           <div className="flex gap-2">
             <h1 className="text-3xl font-semibold tracking-wider mr-16 md:mr-0 text-head-color">
               Posture Police
@@ -35,13 +34,13 @@ const Navbar = () => {
               <PersonOutlineIcon></PersonOutlineIcon>
             </div>
           </Link>
-          <Link to="/analytics">
+          <Link to="/login">
             <div className="flex gap-2">
               <p
-                className="text-md font-bold text-head-color
+                className="text-lg font-bold text-head-color
               "
               >
-                Analytics
+                Login
               </p>
               <AnalyticsIcon sx={{ color: "#3da9fc" }}></AnalyticsIcon>
             </div>
