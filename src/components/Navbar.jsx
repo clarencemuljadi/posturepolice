@@ -42,7 +42,7 @@ const Navbar = () => {
                 className="text-lg font-bold text-head-color
               "
               >
-                Login
+                Analytics
               </p>
               <div>
                 <AnalyticsIcon sx={{ color: "#3da9fc" }}></AnalyticsIcon>

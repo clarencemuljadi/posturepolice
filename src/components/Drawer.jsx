@@ -11,7 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { Link } from "react-router-dom";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 export default function DrawerExample() {
   const [open, setOpen] = React.useState(false);
 
@@ -39,6 +39,16 @@ export default function DrawerExample() {
                 <AnalyticsIcon sx={{ color: "#3da9fc" }}></AnalyticsIcon>
               </ListItemIcon>
               <ListItemText primary="Analytics" />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        <Link to="/login">
+          <ListItem disablePadding style={{ marginTop: 2 }}>
+            <ListItemButton>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
             </ListItemButton>
           </ListItem>
         </Link>
