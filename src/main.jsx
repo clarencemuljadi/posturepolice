@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import Analytics from "./routes/Analytics.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import Register from "./routes/Register.jsx";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/Register",
-    element: <div>Hello world!</div>,
+    element: <Register></Register>,
   },
   {
     path: "/Analytics",
