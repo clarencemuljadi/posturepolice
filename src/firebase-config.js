@@ -1,11 +1,13 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {
+  getFirestore, doc, setDoc
+} from 'firebase/firestore';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut
+} from 'firebase/auth';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAqwQcPQi_fS0QTLEOATgido_IqRHRK7As",
   authDomain: "posturepolice-7e2d1.firebaseapp.com",
@@ -18,4 +20,46 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getFirestore();
+const auth = getAuth();
+
+function detectSlouch() {
+  const userID = 999;
+  logSlouch(userID);
+}
+
+function logSlouch(userID) {
+  console.log("Slouched");
+}
+
+async function signUp(email, password) {
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    setDoc(doc(db, "users", user.uid), {
+      email
+    });
+  })
+  .catch((error) => {
+    console.error(error)
+  });
+}
+
+async function logIn(email, password) {
+  signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    const user = userCredential.user;
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
+async function logOut() {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
