@@ -28,8 +28,27 @@ function detectSlouch() {
   logSlouch(userID);
 }
 
-function logSlouch(userID) {
-  console.log("Slouched");
+async function logSlouch(userID) {
+  try {
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    const userDocRef = doc(db, 'users', userID);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      throw new Error("User document does not exist");
+    }
+
+    const userData = userDoc.data();
+    const slouchCounts = userData.slouchCounts || {};
+
+    const newCount = (slouchCounts[currentDate] || 0) + 1;
+    slouchCounts[currentDate] = newCount;
+
+    await updateDoc(userDocRef, { slouchCounts });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function signUp(email, password) {
