@@ -1,5 +1,11 @@
+import Chart from "../components/Chart";
+
 const Analytics = () => {
-  return <div>Analytics</div>;
+  return (
+    <div>
+      <Chart />
+    </div>
+  );
 };
 
 export default Analytics;
