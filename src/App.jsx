@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <div className="text-white">COMPSCI GANG</div>
+      <div className="text-black">COMPSCI GANG</div>
     </>
   );
 }
