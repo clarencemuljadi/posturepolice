@@ -102,6 +102,16 @@ export async function endSession(slouchCount) {
   }
 }
 
+async function getTodaySessions() {
+  try {
+    const userDoc = await getUserDoc();
+    const slouchStatistics = userDoc.data().slouchStatistics || {};
+    return slouchStatistics[getCurrDate()] || {};
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // Find the ongoing session (session without endedAt)
 async function getOngoingSession() {
   try {
