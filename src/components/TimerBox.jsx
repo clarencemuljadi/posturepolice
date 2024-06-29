@@ -91,7 +91,7 @@ const TimerBox = ({ onVideo, onReset, setTick }) => {
             borderRadius: 0.5,
             fontSize: 22,
             fontWeight: 800,
-            width: 200,
+            width: 300,
             paddingY: 1,
             boxShadow: 5,
             ":hover": {
@@ -100,18 +100,17 @@ const TimerBox = ({ onVideo, onReset, setTick }) => {
             alignSelf: "center",
           }}
         >
-          Pause
+          Pause Session
         </Button>
       )}
-      <StopIcon
-        sx={{
-          fontSize: 60,
-          ":hover": {
-            color: "red",
-          },
-        }}
-        onClick={onRestart}
-      ></StopIcon>
+      <div className="flex hover:bg-red-500 w-60 mt-4" onClick={onRestart}>
+        <StopIcon
+          sx={{
+            fontSize: 60,
+          }}
+        ></StopIcon>
+        <h1 className="text-2xl self-center font-bold">END SESSION</h1>
+      </div>
       <div></div>
     </div>
   );

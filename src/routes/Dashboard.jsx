@@ -137,7 +137,7 @@ function Dashboard() {
     ) {
       console.log("slouching");
       setPosture("slouching");
-    } else if (person.angle.yaw < -40 && person.angle.pitch < -10) {
+    } else if (person.angle.yaw < -45) {
       console.log("faceCLose");
       setPosture("faceClose");
     }
