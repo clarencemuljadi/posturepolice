@@ -1,8 +1,16 @@
 import React from "react";
 import { useStopwatch } from "react-timer-hook";
 import Button from "@mui/material/Button";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-const TimerBox = ({ onVideo }) => {
+import StopIcon from "@mui/icons-material/Stop";
+const TimerBox = ({ onVideo, onReset }) => {
+  const onRestart = () => {
+    onReset();
+    if (isRunning) {
+      onVideo();
+    }
+    reset();
+    pause();
+  };
   const {
     totalSeconds,
     seconds,
@@ -15,8 +23,12 @@ const TimerBox = ({ onVideo }) => {
     reset,
   } = useStopwatch();
   return (
-    <div style={{ textAlign: "center" }}>
+    <div
+      style={{ textAlign: "center" }}
+      className="flex flex-col justify-between h-full"
+    >
       {/* {isRunning ? <Button variant="contained">TEST</Button> : <></>} */}
+      <h1 className="text-4xl font-semibold">Your Current Time:</h1>
       <div className="text-8xl mt-8 mb-8">
         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
         <span>{seconds}</span>
@@ -35,6 +47,7 @@ const TimerBox = ({ onVideo }) => {
             ":hover": {
               bgcolor: "#90b4ce",
             },
+            alignSelf: "center",
           }}
           onClick={() => {
             start();
@@ -61,12 +74,22 @@ const TimerBox = ({ onVideo }) => {
             ":hover": {
               bgcolor: "#90b4ce",
             },
+            alignSelf: "center",
           }}
         >
           Pause
         </Button>
       )}
-      {/* <RestartAltIcon sx={{ fontSize: 60 }}></RestartAltIcon> */}
+      <StopIcon
+        sx={{
+          fontSize: 60,
+          ":hover": {
+            color: "red",
+          },
+        }}
+        onClick={onRestart}
+      ></StopIcon>
+      <div></div>
     </div>
   );
 };
