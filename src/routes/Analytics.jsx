@@ -55,7 +55,13 @@ export default function Analytics() {
 
   const xLabels = getLastSevenDates();
   xLabels.forEach((date) => {
-    dates.push(getTodaySessions(date));
+    const today = getTodaySessions(date);
+    let count = 0;
+    for (const session of Object.values(today)) {
+      count += session.slouchCount || 0;
+    }
+    dates.push(count);
+    console.log(count);
   });
 
   const sessionData = {
