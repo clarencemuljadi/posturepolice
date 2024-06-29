@@ -39,6 +39,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Analytics() {
   const [user, setUser] = useState(null);
   const [chartData, setChartData] = useState([]);
+  const [sessionData, setSessionData] = useState(null);
+  const [todayData, setTodayData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -55,6 +57,8 @@ export default function Analytics() {
 
   useEffect(() => {
     async function fetchData() {
+      if (!user) return; // Don't fetch if user is not authenticated
+
       setIsLoading(true);
       setError(null);
       try {
@@ -72,13 +76,26 @@ export default function Analytics() {
         ];
 
         // Fetch real data for today
-        const todaySessions = await getTodaySessions();
+        const todaySessions = (await getTodaySessions()) || {};
         console.log("Today's sessions:", todaySessions);
 
         let todayCount = 0;
-        if (Object.keys(todaySessions).length > 0) {
-          for (const session of Object.values(todaySessions)) {
+        let totalDuration = 0;
+        let latestSession = null;
+
+        const sessionsArray = Object.values(todaySessions);
+        if (sessionsArray.length > 0) {
+          for (const session of sessionsArray) {
             todayCount += session.slouchCount || 0;
+            totalDuration += session.duration || 0;
+
+            // Find the latest session
+            if (
+              !latestSession ||
+              (session.timestamp && session.endedAt > latestSession.timestamp)
+            ) {
+              latestSession = session;
+            }
           }
         }
 
@@ -86,6 +103,32 @@ export default function Analytics() {
 
         console.log("Final chart data:", data);
         setChartData(data);
+
+        // Set sessionData (latest session)
+        if (latestSession) {
+          setSessionData({
+            duration: Math.round(latestSession.duration * 100) / 100 || 0,
+            badPostureCount: latestSession.slouchCount || 0,
+            badPosturePerMinute: latestSession.duration
+              ? (latestSession.slouchCount || 0) / (latestSession.duration / 60)
+              : 0,
+          });
+        } else {
+          setSessionData({
+            duration: 0,
+            badPostureCount: 0,
+            badPosturePerMinute: 0,
+          });
+        }
+
+        // Set todayData (cumulated data for today)
+        setTodayData({
+          duration: Math.round(totalDuration * 100) / 100,
+          badPostureCount: todayCount,
+          badPosturePerMinute: totalDuration
+            ? todayCount / (totalDuration / 60)
+            : 0,
+        });
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data. Please try again later.");
@@ -93,20 +136,9 @@ export default function Analytics() {
         setIsLoading(false);
       }
     }
+
     fetchData();
-  }, []);
-
-  const sessionData = {
-    duration: 60,
-    badPostureCount: 15,
-    badPosturePerMinute: 15 / 60,
-  };
-
-  const todayData = {
-    duration: 60,
-    badPostureCount: 15,
-    badPosturePerMinute: 15 / 60,
-  };
+  }, [user]); // Depend on user state
 
   if (isLoading) {
     return <div>Loading...</div>;
