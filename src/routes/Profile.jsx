@@ -44,7 +44,7 @@ const Profile = () => {
             <div className="col-span-1 bg-bground rounded-[20px] shadow-xl p-6 border-[3px] border-border-color">
               <div className="flex items-center justify-center mb-8">
                 <img
-                  src="https://media.licdn.com/dms/image/D5603AQFFeUtLXzRVeQ/profile-displayphoto-shrink_200_200/0/1692434169595?e=2147483647&v=beta&t=bxuu9UmnUu697igQUy1qY7O4-b1VwfSMXNrEnukK0zU"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXQ1UbNJpIN1hZKy3SBWtmyNz0RTEqTEMNd5kDEBm5Km5EpmXY4ojIU1oFa_GkRDLfLYc&usqp=CAU"
                   alt="Profile"
                   className="w-48 h-48 rounded-full"
                 />
@@ -65,14 +65,14 @@ const Profile = () => {
                 </div>
                 <div className="flex space-x-32">
                   <div className="text-lg text-text-color font-semibold underline underline-offset-8 decoration-head-color">
-                    Dicky Evaldo
+                    Posture Police
                   </div>
                   <div className="text-lg text-text-color font-semibold underline underline-offset-8 decoration-head-color">
-                    +61 413 964 664
+                    +61 123 456 789
                   </div>
                 </div>
                 <div className="text-lg text-text-color font-semibold underline underline-offset-8 decoration-head-color">
-                  dickyevaldo@gmail.com
+                  posturepolice@gmail.com
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-text-color">SMS alerts activation</span>
@@ -146,7 +146,7 @@ const Profile = () => {
                       Profession
                     </span>
                     <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
-                      UI/UX Designer
+                      Computer Science Student
                     </span>
                   </li>
                   <li className="flex justify-between items-center">
@@ -154,7 +154,7 @@ const Profile = () => {
                       Education
                     </span>
                     <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
-                      UTS
+                      UNSW
                     </span>
                   </li>
                   <li className="flex justify-between items-center">
@@ -162,7 +162,7 @@ const Profile = () => {
                       Fun Fact
                     </span>
                     <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
-                      Got an internship recently
+                      Have a Hunchback
                     </span>
                   </li>
                 </ul>
