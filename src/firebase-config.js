@@ -23,32 +23,43 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 export const auth = getAuth();
 
+// YYYY-MM-DD
+const currDate = new Date().toISOString().split('T')[0];
+const currentUser = auth.currentUser;
+const userUID = currentUser.uid;
+const userDocRef = doc(db, 'users', userUID);
+
 function detectSlouch() {
-  const userID = 999;
-  logSlouch(userID);
+
 }
 
-async function startSession(userID) {
+async function startSession() {
   try {
-    const currentDate = new Date().toISOString().split('T')[0];
-
-    const userDocRef = doc(db, 'users', userID);
-
     const userDoc = await getDoc(userDocRef);
+
     let slouchStatistics = userDoc.data().slouchStatistics || {};
 
-    const sessionsToday = slouchStatistics[currentDate] || {};
-    const latestSessionID = Object.keys(sessionsToday).length;
-    const newSessionID = `session${latestSessionID + 1}`;
+    const sessionsToday = slouchStatistics[currDate] || {};
+    const sessionIDs = Object.keys(sessionsToday).sort();
+    if (sessionIDs.length > 0) {
+      const latestSessionID = sessionIDs[sessionIDs.length - 1];
+      const latestSessionData = sessionsToday[latestSessionID];
+      if (!latestSessionData.endedAt) {
+        console.log(`An ongoing session already exists for user ${userDoc.data().name}: ${latestSessionID}`);
+        return latestSessionID;
+      }
+    }
+
+    const latestSessionNumber = sessionIDs.length;
+    const newSessionID = `session${latestSessionNumber + 1}`;
 
     const sessionData = {
       startedAt: new Date(),
-      endedAt: new Date(), // Implement in endSession
       duration: 0,
       slouchCounts: 0
     };
 
-    slouchStatistics[currentDate] = {
+    slouchStatistics[currDate] = {
       ...sessionsToday,
       [newSessionID]: sessionData
     };
@@ -61,24 +72,38 @@ async function startSession(userID) {
   }
 }
 
-async function logSlouch(userID) {
+async function endSession() {
   try {
-    const currentDate = new Date().toISOString().split('T')[0];
-
-    const userDocRef = doc(db, 'users', userID);
     const userDoc = await getDoc(userDocRef);
+    if (!userDoc.exists()) throw new Error("User document does not exist");
 
-    if (!userDoc.exists) {
-      throw new Error("User document does not exist");
+    let slouchStatistics = userDoc.data().slouchStatistics || {};
+    let sessionsToday = slouchStatistics[currDate] || {};
+
+    let ongoingSessionID, sessionData = null;
+
+    // Find the ongoing session (session without endedAt)
+    for (const [sessionID, session] of Object.entries(sessionsToday)) {
+      if (!session.endedAt) {
+        ongoingSessionID = sessionID;
+        sessionData = session;
+        break;
+      }
     }
 
-    const userData = userDoc.data();
-    const slouchCounts = userData.slouchCounts || {};
+    if (!ongoingSessionID) throw new Error("No ongoing session found for today");
 
-    const newCount = (slouchCounts[currentDate] || 0) + 1;
-    slouchCounts[currentDate] = newCount;
+    const sessionEnd = new Date();
+    const sessionStart = sessionData.startedAt.toDate();
+    const sessionDuration = (sessionEnd - sessionStart) / 1000; // seconds
 
-    await updateDoc(userDocRef, { slouchCounts });
+    sessionData.endedAt = sessionEnd;
+    sessionData.duration = sessionDuration;
+
+    sessionsToday[ongoingSessionID] = sessionData;
+    slouchStatistics[currDate] = sessionsToday;
+
+    await updateDoc(userDocRef, { slouchStatistics });
   } catch (error) {
     console.error(error);
   }
@@ -90,7 +115,7 @@ export async function signUp(email, password, name) {
     const uid = userCredential.user.uid;
 
     await setDoc(doc(db, "users", uid), {
-      name: name
+      name
     });
 
     return userCredential.user;
