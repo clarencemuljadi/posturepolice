@@ -14,6 +14,9 @@ export default {
         "border-color": "#094067",
         "second-b-color": "#90b4ce",
       },
+      fontFamily: {
+        'metal': ['Metal Mania', 'cursive'],
+      },
     },
   },
   plugins: [],

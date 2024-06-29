@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 
 import Checkbox from "@mui/material/Checkbox";
 import Navbar from "../components/Navbar";
-import { logIn, auth} from "../firebase-config";
+import { logIn, auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { Link } from "react-router-dom";
@@ -38,24 +38,24 @@ const Register = () => {
     const { name, value } = e.target;
     setUserDetails((prevDetails) => ({
       ...prevDetails,
-      [name]: value
+      [name]: value,
     }));
-  }
+  };
 
   const onSubmit = async () => {
     setUser(await logIn(userDetails.email, userDetails.password));
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
+      setUser(currentUser);
       if (currentUser) {
-        navigate("/Dashboard")
+        navigate("/Dashboard");
       }
-    })
+    });
 
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -76,6 +76,7 @@ const Register = () => {
             <TextField
               sx={textFieldStyle}
               name="password"
+              type="password"
               label="Password"
               variant="outlined"
               onChange={onChange}
@@ -100,12 +101,10 @@ const Register = () => {
             </b>
           </p>
           <Link to="/Register">
-          <p className="text-xl mt-1">
-            {" "}
-            <b className="text-button-color hover:text-blue-900">
-              Sign up
-            </b>
-          </p>
+            <p className="text-xl mt-1">
+              {" "}
+              <b className="text-button-color hover:text-blue-900">Sign up</b>
+            </p>
           </Link>
         </div>
       </div>

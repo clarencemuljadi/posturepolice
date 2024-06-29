@@ -8,6 +8,9 @@ import close from "../assets/Slouching-15.svg";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import bell from "../assets/big bell.mp3";
+import correct from "../assets/correct.mp3";
+import { endSession } from "../firebase-config";
 
 function Dashboard() {
   const videoRef = useRef(null);
@@ -19,6 +22,8 @@ function Dashboard() {
   const [postureCount, setPostureCount] = useState(0);
   const [currentPosition, setCurrentPosition] = useState("");
   const [badPostureCount, setBadPostureCount] = useState(0);
+  const [lockin, setLockin] = useState(false);
+  const [tick, setTick] = useState(1000);
   const navigate = useNavigate();
 
   const modelPath = "../model/";
@@ -26,12 +31,19 @@ function Dashboard() {
   const maxResults = 5;
   let optionsSSDMobileNet;
 
+  const playAudio = (sound) => {
+    const audio = new Audio(sound); // Path to your audio file in the public folder
+    audio.play();
+  };
+
   const reset = () => {
     setPosture("");
     setExpression("");
     setPrevPosture("");
     setPostureCount(0);
-    badPostureCount(0);
+    setTick(1000);
+    endSession(badPostureCount);
+    setBadPostureCount(0);
   };
 
   const getPostureSVG = () => {
@@ -88,7 +100,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const interval = setInterval(checkPosture, 1000);
+    const interval = setInterval(checkPosture, tick);
     return () => clearInterval(interval);
   }, [isPlaying, posture, prevPosture, postureCount]);
 
@@ -125,7 +137,7 @@ function Dashboard() {
     ) {
       console.log("slouching");
       setPosture("slouching");
-    } else if (person.angle.yaw < -40 && person.angle.pitch < -10) {
+    } else if (person.angle.yaw < -45) {
       console.log("faceCLose");
       setPosture("faceClose");
     }
@@ -252,13 +264,25 @@ function Dashboard() {
   return (
     <div className="flex flex-col min-h-screen ">
       <Navbar></Navbar>
-      <div className="bg-gray-100 min-h-screen flex flex-col">
+      <div
+        className={`${
+          tick === 10 ? "bg-red-600" : "bg-gray-100"
+        } min-h-screen flex flex-col`}
+      >
         <div className="flex h-full p-8 justify-between gap-4 px-14">
           <div className="border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl ">
-            <TimerBox onVideo={togglePlayPause} onReset={reset}></TimerBox>
+            <TimerBox
+              onVideo={togglePlayPause}
+              onReset={reset}
+              setTick={setTick}
+            ></TimerBox>
           </div>
           <div className="flex flex-col border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl">
-            <h1 className="text-4xl font-semibold text-center">
+            <h1
+              className={`text-4xl font-semibold text-center ${
+                tick === 10 ? "font-metal" : ""
+              }`}
+            >
               Your Current Position:
             </h1>
             {getPostureSVG()}
@@ -269,6 +293,7 @@ function Dashboard() {
             <h1 className="text-4xl font-semibold text-center">
               Your Current Expression:
             </h1>
+            <h1 className="text-4xl font-bold text-center">{expression}</h1>
           </div>
         </div>
         <div className="appvideo hidden">

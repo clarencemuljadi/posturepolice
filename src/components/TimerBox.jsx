@@ -2,7 +2,14 @@ import React from "react";
 import { useStopwatch } from "react-timer-hook";
 import Button from "@mui/material/Button";
 import StopIcon from "@mui/icons-material/Stop";
-const TimerBox = ({ onVideo, onReset }) => {
+import Switch from "@mui/material/Switch";
+import giga from "../assets/g3oxem - GigaChad Theme (Phonk House Version).mp3";
+import { startSession } from "../firebase-config";
+const TimerBox = ({ onVideo, onReset, setTick }) => {
+  const playAudio = (sound) => {
+    const audio = new Audio(sound); // Path to your audio file in the public folder
+    audio.play();
+  };
   const onRestart = () => {
     onReset();
     if (isRunning) {
@@ -27,8 +34,23 @@ const TimerBox = ({ onVideo, onReset }) => {
       style={{ textAlign: "center" }}
       className="flex flex-col justify-between h-full"
     >
-      {/* {isRunning ? <Button variant="contained">TEST</Button> : <></>} */}
-      <h1 className="text-4xl font-semibold">Your Current Time:</h1>
+      <div className="flex gap-4">
+        <Button
+          sx={{
+            bgcolor: "red",
+            ":hover": {
+              bgcolor: "black",
+            },
+          }}
+          variant="contained"
+          onClick={() => {
+            setTick(10), playAudio(giga);
+          }}
+        >
+          <span className="font-metal text-xl">LOCK IN MODE</span>
+        </Button>
+      </div>
+      <h1 className="text-4xl font-semibold mt-4">Your Current Time:</h1>
       <div className="text-8xl mt-8 mb-8">
         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
         <span>{seconds}</span>
@@ -52,6 +74,7 @@ const TimerBox = ({ onVideo, onReset }) => {
           onClick={() => {
             start();
             onVideo();
+            startSession();
           }}
         >
           Start Session
@@ -68,7 +91,7 @@ const TimerBox = ({ onVideo, onReset }) => {
             borderRadius: 0.5,
             fontSize: 22,
             fontWeight: 800,
-            width: 200,
+            width: 300,
             paddingY: 1,
             boxShadow: 5,
             ":hover": {
@@ -77,18 +100,17 @@ const TimerBox = ({ onVideo, onReset }) => {
             alignSelf: "center",
           }}
         >
-          Pause
+          Pause Session
         </Button>
       )}
-      <StopIcon
-        sx={{
-          fontSize: 60,
-          ":hover": {
-            color: "red",
-          },
-        }}
-        onClick={onRestart}
-      ></StopIcon>
+      <div className="flex hover:bg-red-500 w-60 mt-4" onClick={onRestart}>
+        <StopIcon
+          sx={{
+            fontSize: 60,
+          }}
+        ></StopIcon>
+        <h1 className="text-2xl self-center font-bold">END SESSION</h1>
+      </div>
       <div></div>
     </div>
   );
