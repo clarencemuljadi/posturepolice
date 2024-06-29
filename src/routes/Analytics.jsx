@@ -12,6 +12,9 @@ import SessionDetailsTable from "../components/analytics/SessionDetailsTable";
 import Navbar from "../components/Navbar";
 import TodayDetailsTable from "../components/analytics/TodayDetailsTable";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase-config";
 
 function getLastSevenDates() {
   const dates = [];
@@ -37,6 +40,17 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Analytics() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (!currentUser) {
+        navigate("/Login");
+      }
+    });
+    return () => unsubscribe();
+  }, []);
   const [chartSize, setChartSize] = useState({ width: 500, height: 300 });
   const dates = [45, 26, 50, 34, 23, 21, 39];
   const xLabels = getLastSevenDates();
