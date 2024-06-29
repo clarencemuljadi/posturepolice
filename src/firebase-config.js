@@ -28,18 +28,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 export const auth = getAuth();
 
-// YYYY-MM-DD
-function getCurrDate() {
-  const options = {
-    timeZone: "Australia/Sydney",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  const date = new Date().toLocaleDateString("en-CA", options);
-  return date;
-}
-
 function getUserUID() {
   if (!auth) throw new Error("Auth does not exist");
   const currentUser = auth.currentUser;
@@ -59,12 +47,23 @@ async function getUserDoc() {
   return userDoc;
 }
 
+// YYYY-MM-DD
+function getDateNDaysBefore(days) {
+  const options = { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return date.toLocaleDateString('en-CA', options);
+}
+
+function getCurrDate() {
+  return getDateNDaysBefore(0);
+}
+
 export async function startSession() {
   try {
     const userDoc = await getUserDoc();
 
     const slouchStatistics = userDoc.data().slouchStatistics || {};
-
     const sessionsToday = slouchStatistics[getCurrDate()] || {};
     const sessionIDs = Object.keys(sessionsToday).sort();
     if (sessionIDs.length > 0) {
@@ -125,6 +124,16 @@ export async function getTodaySessions() {
     const userDoc = await getUserDoc();
     const slouchStatistics = userDoc.data().slouchStatistics || {};
     return slouchStatistics[getCurrDate()] || {};
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getSessions(daysBefore) {
+  try {
+    const userDoc = await getUserDoc();
+    const slouchStatistics = userDoc.data().slouchStatistics || {};
+    return slouchStatistics[getDateNDaysBefore(daysBefore)] || {};
   } catch (error) {
     console.error(error);
   }
