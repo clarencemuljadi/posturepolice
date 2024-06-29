@@ -2,6 +2,7 @@ import React from "react";
 import { useStopwatch } from "react-timer-hook";
 import Button from "@mui/material/Button";
 import StopIcon from "@mui/icons-material/Stop";
+import { startSession } from "../firebase-config";
 const TimerBox = ({ onVideo, onReset }) => {
   const onRestart = () => {
     onReset();
@@ -52,6 +53,7 @@ const TimerBox = ({ onVideo, onReset }) => {
           onClick={() => {
             start();
             onVideo();
+            startSession();
           }}
         >
           Start Session

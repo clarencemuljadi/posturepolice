@@ -8,6 +8,7 @@ import close from "../assets/Slouching-15.svg";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { endSession } from "../firebase-config";
 
 function Dashboard() {
   const videoRef = useRef(null);
@@ -31,7 +32,8 @@ function Dashboard() {
     setExpression("");
     setPrevPosture("");
     setPostureCount(0);
-    badPostureCount(0);
+    endSession(badPostureCount);
+    setBadPostureCount(0);
   };
 
   const getPostureSVG = () => {

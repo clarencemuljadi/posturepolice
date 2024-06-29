@@ -24,28 +24,34 @@ const db = getFirestore();
 export const auth = getAuth();
 
 // YYYY-MM-DD
-const currDate = new Date().toISOString().split('T')[0];
-const currentUser = auth.currentUser;
-const userUID = currentUser.uid;
-const userDocRef = doc(db, 'users', userUID);
+function getCurrDate() {
+  const options = { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const date = new Date().toLocaleDateString('en-CA', options);
+  return date;
+}
 
-export async function getUserDoc() {
-  const userDoc = await getDoc(userDocRef);
-  if (!userDoc.exists()) throw new Error("User document does not exist");
+function getUserUID() {
+  if (!auth) throw new Error("Auth does not exist");
+  return auth.currentUser.uid;
+}
+
+function getUserDocRef() {
+  return doc(db, 'users', getUserUID());
+}
+
+async function getUserDoc() {
+  const userDoc = await getDoc(getUserDocRef());
+  if (!userDoc.exists) throw new Error("User document does not exist");
   return userDoc;
 }
 
-function detectSlouch() {
-
-}
-
-async function startSession() {
+export async function startSession() {
   try {
-    const userDoc = getUserDoc();
+    const userDoc = await getUserDoc();
 
-    let slouchStatistics = userDoc.data().slouchStatistics || {};
+    const slouchStatistics = userDoc.data().slouchStatistics || {};
 
-    const sessionsToday = slouchStatistics[currDate] || {};
+    const sessionsToday = slouchStatistics[getCurrDate()] || {};
     const sessionIDs = Object.keys(sessionsToday).sort();
     if (sessionIDs.length > 0) {
       const latestSessionID = sessionIDs[sessionIDs.length - 1];
@@ -56,21 +62,15 @@ async function startSession() {
       }
     }
 
-    const latestSessionNumber = sessionIDs.length;
-    const newSessionID = `session${latestSessionNumber + 1}`;
+    const newSessionID = `session${sessionIDs.length + 1}`;
+    const sessionData = { startedAt: new Date() };
 
-    const sessionData = {
-      startedAt: new Date(),
-      duration: 0,
-      slouchCounts: 0
-    };
-
-    slouchStatistics[currDate] = {
+    slouchStatistics[getCurrDate()] = {
       ...sessionsToday,
       [newSessionID]: sessionData
     };
 
-    await updateDoc(userDocRef, { slouchStatistics });
+    await updateDoc(getUserDocRef(), { slouchStatistics });
 
     return newSessionID;
   } catch (error) {
@@ -78,24 +78,25 @@ async function startSession() {
   }
 }
 
-async function endSession() {
+export async function endSession(slouchCount) {
   try {
     const { sessionID, sessionData } = await getOngoingSession();
 
     const sessionEnd = new Date();
-    const sessionStart = new Date(sessionData.startedAt);
+    const sessionStart = sessionData.startedAt.toDate();
     const sessionDuration = (sessionEnd - sessionStart) / 1000; // seconds
 
     sessionData.endedAt = sessionEnd;
     sessionData.duration = sessionDuration;
+    sessionData.slouchCount = slouchCount;
 
-    const userDoc = getUserDoc();
-    let slouchStatistics = userDoc.data().slouchStatistics || {};
-    let sessionsToday = slouchStatistics[currDate] || {};
+    const userDoc = await getUserDoc();
+    const slouchStatistics = userDoc.data().slouchStatistics || {};
+    const sessionsToday = slouchStatistics[getCurrDate()] || {};
     sessionsToday[sessionID] = sessionData;
-    slouchStatistics[currDate] = sessionsToday;
+    slouchStatistics[getCurrDate()] = sessionsToday;
 
-    await updateDoc(userDocRef, { slouchStatistics });
+    await updateDoc(getUserDocRef(), { slouchStatistics });
   } catch (error) {
     console.error(error);
   }
@@ -104,11 +105,10 @@ async function endSession() {
 // Find the ongoing session (session without endedAt)
 async function getOngoingSession() {
   try {
-    const userDoc = getUserDoc();
-    if (!userDoc.exists()) throw new Error("User document does not exist");
+    const userDoc = await getUserDoc();
 
     let slouchStatistics = userDoc.data().slouchStatistics || {};
-    let sessionsToday = slouchStatistics[currDate] || {};
+    let sessionsToday = slouchStatistics[getCurrDate()] || {};
 
     for (const [sessionID, session] of Object.entries(sessionsToday)) {
       if (!session.endedAt) {
