@@ -1,30 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Analytics from "./routes/Analytics.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Register from "./routes/Register.jsx";
 import Login from "./routes/Login.jsx";
 import Profile from "./routes/Profile.jsx";
+import Home from "./routes/Home.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/Dashboard" />,
+    element: <Home />,
   },
   {
     path: "/Login",
-    element: <Login></Login>,
+    element: <Login />,
   },
   {
     path: "/Register",
-    element: <Register></Register>,
+    element: <Register />,
   },
   {
     path: "/Analytics",
@@ -32,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/Dashboard",
-    element: <Dashboard></Dashboard>,
+    element: <Dashboard />,
   },
   {
     path: "/Profile",

@@ -3,10 +3,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { Link } from "react-router-dom";
 import DrawerExample from "./Drawer";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import LoginIcon from "@mui/icons-material/Login";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import AirlineSeatReclineNormalIcon from "@mui/icons-material/AirlineSeatReclineNormal";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -26,7 +26,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="flex max-w-full justify-between border-b-2 border-border-color px-6 py-4 align-middle shadow-sm">
+    <nav className="flex max-w-full justify-between border-b-2 border-border-color px-6 py-4 align-middle shadow-sm sticky top-0 z-50 bg-white">
       <div className="flex self-center">
         <DrawerExample></DrawerExample>
       </div>
@@ -36,9 +36,9 @@ const Navbar = () => {
             <h1 className="text-3xl font-semibold tracking-wider mr-16 md:mr-0 text-head-color">
               Posture Police
             </h1>
-            <LocalHospitalIcon
+            <AirlineSeatReclineNormalIcon
               sx={{ fontSize: 38, color: "#ef4565" }}
-            ></LocalHospitalIcon>
+            />
           </div>
         </Link>
       </div>
@@ -50,7 +50,7 @@ const Navbar = () => {
                 <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
                   <p className="text-lg font-bold text-head-color">Profile</p>
                   <div>
-                    <PersonOutlineIcon></PersonOutlineIcon>
+                    <PersonOutlineIcon />
                   </div>
                 </div>
               </Link>
@@ -58,7 +58,7 @@ const Navbar = () => {
                 <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
                   <p className="text-lg font-bold text-head-color">Analytics</p>
                   <div>
-                    <AnalyticsIcon sx={{ color: "#3da9fc" }}></AnalyticsIcon>
+                    <AnalyticsIcon sx={{ color: "#3da9fc" }} />
                   </div>
                 </div>
               </Link>
@@ -69,7 +69,7 @@ const Navbar = () => {
                 <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
                   <p className="text-lg font-bold text-head-color">Register</p>
                   <div>
-                    <HowToRegIcon sx={{ color: "#3da9fc" }}></HowToRegIcon>
+                    <HowToRegIcon sx={{ color: "#3da9fc" }} />
                   </div>
                 </div>
               </Link>
@@ -77,7 +77,7 @@ const Navbar = () => {
                 <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
                   <p className="text-lg font-bold text-head-color">Login</p>
                   <div>
-                    <LoginIcon sx={{ color: "#3da9fc" }}></LoginIcon>
+                    <LoginIcon sx={{ color: "#3da9fc" }} />
                   </div>
                 </div>
               </Link>

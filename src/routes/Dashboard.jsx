@@ -1,12 +1,16 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import * as faceapi from "@vladmandic/face-api";
 import TimerBox from "../components/TimerBox";
+import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Dashboard() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const navigate = useNavigate();
 
   const modelPath = "../model/";
   const minScore = 0.2;
@@ -14,13 +18,25 @@ function Dashboard() {
   let optionsSSDMobileNet;
 
   useEffect(() => {
-    const setup = async () => {
-      await setupFaceAPI();
-      await setupCamera();
-    };
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, proceed with setup
+        setup();
+      } else {
+        // User is signed out, redirect to login page
+        navigate("/login");
+      }
+    });
 
-    setup();
-  }, []);
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const setup = async () => {
+    await setupFaceAPI();
+    await setupCamera();
+  };
 
   // helper function to pretty-print json object to string
   function str(json) {
@@ -248,6 +264,7 @@ function Dashboard() {
           onClick={togglePlayPause}
         />
       </div>
+      <Footer />
     </div>
   );
 }

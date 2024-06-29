@@ -5,24 +5,25 @@ import { logOut } from "../firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const onSubmit = async () => {
     setUser(await logOut());
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
+      setUser(currentUser);
       if (!currentUser) {
-        navigate("/Login")
+        navigate("/Login");
       }
-    })
+    });
 
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <div>
@@ -72,7 +73,10 @@ const Profile = () => {
                   Save
                 </button>
                 <Link to="/Login">
-                  <button className="mt-3 font-semibold text-red-500 hover:underline underline-offset-4 active:text-red-700" onClick={onSubmit}>
+                  <button
+                    className="mt-3 font-semibold text-red-500 hover:underline underline-offset-4 active:text-red-700"
+                    onClick={onSubmit}
+                  >
                     Logout
                   </button>
                 </Link>
@@ -154,6 +158,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
