@@ -2,7 +2,13 @@ import React from "react";
 import { useStopwatch } from "react-timer-hook";
 import Button from "@mui/material/Button";
 import StopIcon from "@mui/icons-material/Stop";
-const TimerBox = ({ onVideo, onReset }) => {
+import Switch from "@mui/material/Switch";
+import giga from "../assets/g3oxem - GigaChad Theme (Phonk House Version).mp3";
+const TimerBox = ({ onVideo, onReset, setTick }) => {
+  const playAudio = (sound) => {
+    const audio = new Audio(sound); // Path to your audio file in the public folder
+    audio.play();
+  };
   const onRestart = () => {
     onReset();
     if (isRunning) {
@@ -27,8 +33,23 @@ const TimerBox = ({ onVideo, onReset }) => {
       style={{ textAlign: "center" }}
       className="flex flex-col justify-between h-full"
     >
-      {/* {isRunning ? <Button variant="contained">TEST</Button> : <></>} */}
-      <h1 className="text-4xl font-semibold">Your Current Time:</h1>
+      <div className="flex gap-4">
+        <Button
+          sx={{
+            bgcolor: "red",
+            ":hover": {
+              bgcolor: "black",
+            },
+          }}
+          variant="contained"
+          onClick={() => {
+            setTick(10), playAudio(giga);
+          }}
+        >
+          <span className="font-metal text-xl">LOCK IN MODE</span>
+        </Button>
+      </div>
+      <h1 className="text-4xl font-semibold mt-4">Your Current Time:</h1>
       <div className="text-8xl mt-8 mb-8">
         <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
         <span>{seconds}</span>
