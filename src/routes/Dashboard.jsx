@@ -16,7 +16,7 @@ function Dashboard() {
   useEffect(() => {
     const setup = async () => {
       await setupFaceAPI();
-      setupCamera();
+      await setupCamera();
     };
 
     setup();
@@ -239,13 +239,13 @@ function Dashboard() {
       <div className="appvideo hidden">
         <video crossOrigin="anonymous" ref={videoRef}></video>
       </div>
-      {/* <canvas
+      <canvas
         ref={canvasRef}
         width="940"
         height="650"
-        className="appcanvas"
+        className="appcanvas hidden"
         onClick={togglePlayPause}
-      /> */}
+      />
     </div>
   );
 }
