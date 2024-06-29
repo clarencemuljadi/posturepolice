@@ -43,7 +43,7 @@ async function startSession(userID) {
 
     const sessionData = {
       startedAt: new Date(),
-      endedAt: new Date(),
+      endedAt: new Date(), // Implement in endSession
       duration: 0,
       slouchCounts: 0
     };
@@ -109,7 +109,7 @@ export async function logIn(email, password) {
   });
 }
 
-async function logOut() {
+export async function logOut() {
   signOut(auth).then(() => {
     // Sign-out successful.
   })

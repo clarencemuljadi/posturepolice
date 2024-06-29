@@ -4,8 +4,8 @@ import Button from "@mui/material/Button";
 
 import Checkbox from "@mui/material/Checkbox";
 import Navbar from "../components/Navbar";
-import { logIn, auth} from "../firebase-config";
-import { useNavigate } from "react-router-dom";
+import { signUp, auth} from "../firebase-config";
+import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -29,6 +29,7 @@ const textFieldStyle = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [userDetails, setUserDetails] = useState({
     userName: "",
     email: "",
@@ -36,7 +37,6 @@ const Register = () => {
     confirm: ""
   });
 
-  const [user, setUser] = useState(null);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +57,8 @@ const Register = () => {
         navigate("/Dashboard")
       }
     })
+
+    return () => unsubscribe();
   }, [])
 
   return (
@@ -129,10 +131,12 @@ const Register = () => {
           >
             <p className="normal-case font-bold text-2xl">Create an account</p>
           </Button>
+          <Link to="/Login">
           <p className="text-xl">
             Already have an account?{" "}
             <b className="text-button-color hover:text-blue-900">Login here</b>
           </p>
+          </Link>
         </div>
       </div>
     </div>

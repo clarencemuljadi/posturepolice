@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import { logIn, auth} from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-
+import { Link } from "react-router-dom";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const textFieldStyle = {
@@ -53,6 +53,8 @@ const Register = () => {
         navigate("/Dashboard")
       }
     })
+
+    return () => unsubscribe();
   }, [])
 
   return (
@@ -97,6 +99,14 @@ const Register = () => {
               Forgot Password?
             </b>
           </p>
+          <Link to="/Register">
+          <p className="text-xl mt-1">
+            {" "}
+            <b className="text-button-color hover:text-blue-900">
+              Sign up
+            </b>
+          </p>
+          </Link>
         </div>
       </div>
     </div>
