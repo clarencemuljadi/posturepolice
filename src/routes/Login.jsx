@@ -1,10 +1,13 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 import Checkbox from "@mui/material/Checkbox";
 import Navbar from "../components/Navbar";
-
+import { logIn, auth} from "../firebase-config";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { Link } from "react-router-dom";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const textFieldStyle = {
@@ -27,6 +30,33 @@ const textFieldStyle = {
 
 // h-1/3 w-1/3 max-w-screen-sm min-w-fit min-w-[700px]
 const Register = () => {
+  const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState({});
+  const [user, setUser] = useState(null);
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value
+    }));
+  }
+
+  const onSubmit = async () => {
+    setUser(await logIn(userDetails.email, userDetails.password));
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+      if (currentUser) {
+        navigate("/Dashboard")
+      }
+    })
+
+    return () => unsubscribe();
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -38,15 +68,17 @@ const Register = () => {
           <div className=" flex flex-col items-center justify-start gap-6">
             <TextField
               sx={textFieldStyle}
-              id="email"
+              name="email"
               label="Email Address"
               variant="outlined"
+              onChange={onChange}
             />
             <TextField
               sx={textFieldStyle}
-              id="password"
+              name="password"
               label="Password"
               variant="outlined"
+              onChange={onChange}
             />
             <Button
               sx={{
@@ -55,6 +87,7 @@ const Register = () => {
                 borderRadius: "12px",
                 background: "#3da9fc",
               }}
+              onClick={onSubmit}
               variant="contained"
             >
               <p className="normal-case font-bold text-xl">Sign in</p>
@@ -66,6 +99,14 @@ const Register = () => {
               Forgot Password?
             </b>
           </p>
+          <Link to="/Register">
+          <p className="text-xl mt-1">
+            {" "}
+            <b className="text-button-color hover:text-blue-900">
+              Sign up
+            </b>
+          </p>
+          </Link>
         </div>
       </div>
     </div>
