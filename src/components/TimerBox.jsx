@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import StopIcon from "@mui/icons-material/Stop";
 import Switch from "@mui/material/Switch";
 import giga from "../assets/g3oxem - GigaChad Theme (Phonk House Version).mp3";
+import { startSession } from "../firebase-config";
 const TimerBox = ({ onVideo, onReset, setTick }) => {
   const playAudio = (sound) => {
     const audio = new Audio(sound); // Path to your audio file in the public folder
@@ -73,6 +74,7 @@ const TimerBox = ({ onVideo, onReset, setTick }) => {
           onClick={() => {
             start();
             onVideo();
+            startSession();
           }}
         >
           Start Session

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import bell from "../assets/big bell.mp3";
 import correct from "../assets/correct.mp3";
+import { endSession } from "../firebase-config";
 
 function Dashboard() {
   const videoRef = useRef(null);
@@ -40,8 +41,9 @@ function Dashboard() {
     setExpression("");
     setPrevPosture("");
     setPostureCount(0);
-    setBadPostureCount(0);
     setTick(1000);
+    endSession(badPostureCount);
+    setBadPostureCount(0);
   };
 
   const getPostureSVG = () => {

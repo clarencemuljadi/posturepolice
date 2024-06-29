@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
 import { logOut } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -24,6 +23,16 @@ const Profile = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   return (
     <div>
@@ -69,17 +78,17 @@ const Profile = () => {
                   <span className="text-text-color">SMS alerts activation</span>
                   <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                 </div>
-                <button className="w-full py-2 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold rounded-2xl hover:shadow-md focus:ring focus:ring-cyan-500">
-                  Save
-                </button>
-                <Link to="/Login">
+                <div className="flex items-center justify-center space-x-4">
+                  <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold py-2 px-4 rounded-3xl hover:shadow-md focus:ring focus:ring-blue-400">
+                    Save
+                  </button>
                   <button
-                    className="mt-3 font-semibold text-red-500 hover:underline underline-offset-4 active:text-red-700"
-                    onClick={onSubmit}
+                    className="bg-gradient-to-r from-red-400 to-[#ff5470] text-button-text-color font-semibold py-2 px-4 rounded-3xl hover:shadow-md focus:ring focus:ring-red-400"
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
-                </Link>
+                </div>
               </div>
             </div>
 
@@ -88,25 +97,27 @@ const Profile = () => {
               <div className="bg-bground p-6 rounded-[20px] shadow-lg row-span-1 border-[3px] border-border-color">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-head-color">
-                    My xPay accounts
+                    Posture Count
                   </h2>
-                  <button className="text-sm text-head-color">Edit</button>
+                  <button className="text-sm text-head-color hover:underline underline-offset-2">
+                    Edit
+                  </button>
                 </div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-text-color font-semibold">
-                      Active account
+                      Bad Posture
                     </span>
-                    <button className=" py-1 px-3 bg-red-500 text-white text-sm rounded-md">
-                      Block Account
+                    <button className=" py-1 px-3 bg-red-500 text-white text-sm font-bold rounded-md">
+                      100
                     </button>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-text-color font-semibold">
-                      Blocked account
+                      Good Posture
                     </span>
-                    <button className="py-1 px-3 bg-green-500 text-white text-sm rounded-md">
-                      Unblock Account
+                    <button className="py-1 px-3 bg-green-500 text-white text-sm font-bold rounded-md">
+                      300
                     </button>
                   </div>
                 </div>
@@ -115,41 +126,43 @@ const Profile = () => {
               <div className="bg-bground p-6 rounded-[20px] shadow-lg row-span-2 border-[3px] border-border-color">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-head-color">
-                    My bills
+                    About Me
                   </h2>
-                  <button className="text-sm text-head-color">Filter by</button>
+                  <button className="text-sm text-head-color hover:underline underline-offset-2">
+                    Filter by
+                  </button>
                 </div>
                 <ul className="space-y-4">
                   <li className="flex justify-between items-center">
                     <span className="text-text-color font-semibold">
-                      Phone bill
+                      Height
                     </span>
-                    <span className="py-1 px-3 bg-green-500 text-white text-sm rounded-md">
-                      Bill paid
-                    </span>
-                  </li>
-                  <li className="flex justify-between items-center">
-                    <span className="text-text-color font-semibold">
-                      Internet bill
-                    </span>
-                    <span className="py-1 px-3 bg-red-500 text-white text-sm rounded-md">
-                      Not paid
+                    <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
+                      165 cm
                     </span>
                   </li>
                   <li className="flex justify-between items-center">
                     <span className="text-text-color font-semibold">
-                      House rent
+                      Profession
                     </span>
-                    <span className="py-1 px-3 bg-green-500 text-white text-sm rounded-md">
-                      Bill paid
+                    <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
+                      UI/UX Designer
                     </span>
                   </li>
                   <li className="flex justify-between items-center">
                     <span className="text-text-color font-semibold">
-                      Income tax
+                      Education
                     </span>
-                    <span className="py-1 px-3 bg-green-500 text-white text-sm rounded-md">
-                      Bill paid
+                    <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
+                      UTS
+                    </span>
+                  </li>
+                  <li className="flex justify-between items-center">
+                    <span className="text-text-color font-semibold">
+                      Fun Fact
+                    </span>
+                    <span className="py-1 px-3 bg-button-color text-white text-sm font-bold rounded-md">
+                      Got an internship recently
                     </span>
                   </li>
                 </ul>
