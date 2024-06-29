@@ -8,6 +8,9 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import Analytics from "./routes/Analytics.jsx";
+import Dashboard from "./routes/Dashboard.jsx";
+import Register from "./routes/Register.jsx";
+import Login from "./routes/Login.jsx";
 import Profile from "./routes/Profile.jsx";
 
 const router = createBrowserRouter([
@@ -17,11 +20,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/Login",
-    element: <div>Hello world!</div>,
+    element: <Login></Login>,
   },
   {
     path: "/Register",
-    element: <div>Hello world!</div>,
+    element: <Register></Register>,
   },
   {
     path: "/Analytics",
@@ -29,7 +32,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/Dashboard",
-    element: <div>Hello world!</div>,
+    element: <Dashboard></Dashboard>,
   },
   {
     path: "/Profile",
