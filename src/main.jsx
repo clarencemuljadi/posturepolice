@@ -1,16 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import Analytics from "./routes/Analytics.jsx";
 import {
   createBrowserRouter,
-  Navigate,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import "./index.css";
+import Analytics from "./routes/Analytics.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Register from "./routes/Register.jsx";
 import Login from "./routes/Login.jsx";
+import Profile from "./routes/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/Dashboard",
     element: <Dashboard></Dashboard>,
+  },
+  {
+    path: "/Profile",
+    element: <Profile />,
   },
 ]);
 
