@@ -23,6 +23,18 @@ function getLastSevenDates() {
   return dates;
 }
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border border-gray-300 p-2 shadow-md">
+        <p className="text-sm">{`Date: ${label}`}</p>
+        <p className="text-sm font-semibold">{`Triggers: ${payload[0].value}`}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Analytics() {
   const [chartSize, setChartSize] = useState({ width: 500, height: 300 });
   const dates = [45, 26, 50, 34, 23, 21, 39];
@@ -42,7 +54,7 @@ export default function Analytics() {
 
   const data = xLabels.map((date, index) => ({
     date,
-    value: dates[index],
+    triggers: dates[index],
   }));
 
   useEffect(() => {
@@ -69,14 +81,14 @@ export default function Analytics() {
           You&apos;re doing great! Keep it up!
         </h1>
         <div className="w-full max-w-4xl space-y-8">
-          <div className="flex flex-col md:flex-row w-full md:space-x-8 space-y-8 md:space-y-0">
+          <div className="flex flex-col lg:flex-row w-full lg:space-x-8 space-y-8 lg:space-y-0">
             <SessionDetailsTable
               sessionData={sessionData}
-              className="flex-1 w-full md:w-1/2 rounded-lg shadow-md bg-white"
+              className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
             />
             <TodayDetailsTable
               sessionData={todayData}
-              className="flex-1 w-full md:w-1/2 rounded-lg shadow-md bg-white"
+              className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
             />
           </div>
           <div className="bg-white shadow-md rounded-lg p-6 w-full">
@@ -86,8 +98,8 @@ export default function Analytics() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                <Tooltip content={<CustomTooltip />} />
+                <Line type="monotone" dataKey="triggers" stroke="#8884d8" />
               </LineChart>
             </ResponsiveContainer>
           </div>
