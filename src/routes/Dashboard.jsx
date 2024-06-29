@@ -228,24 +228,26 @@ function Dashboard() {
   return (
     <div className="flex flex-col min-h-screen ">
       <Navbar></Navbar>
-      <div className="flex h-full p-8 justify-between gap-4 px-14">
-        <div className="border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 ">
-          <TimerBox onVideo={togglePlayPause}></TimerBox>
+      <div className="bg-gray-100 min-h-screen flex flex-col">
+        <div className="flex h-full p-8 justify-between gap-4 px-14">
+          <div className="border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl">
+            <TimerBox onVideo={togglePlayPause}></TimerBox>
+          </div>
+          <div className="flex flex-col border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl">
+            <h1 className="text-4xl font-semibold">Your Current Position:</h1>
+          </div>
         </div>
-        <div className="flex flex-col border-4 border-border-color w-6/12 rounded-lg p-6 mt-4">
-          <h1 className="text-4xl font-semibold">Your Current Position:</h1>
+        <div className="appvideo hidden">
+          <video crossOrigin="anonymous" ref={videoRef}></video>
         </div>
+        <canvas
+          ref={canvasRef}
+          width="940"
+          height="650"
+          className="appcanvas hidden"
+          onClick={togglePlayPause}
+        />
       </div>
-      <div className="appvideo hidden">
-        <video crossOrigin="anonymous" ref={videoRef}></video>
-      </div>
-      <canvas
-        ref={canvasRef}
-        width="940"
-        height="650"
-        className="appcanvas hidden"
-        onClick={togglePlayPause}
-      />
     </div>
   );
 }

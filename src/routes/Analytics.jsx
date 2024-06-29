@@ -74,34 +74,36 @@ export default function Analytics() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex-grow flex flex-col items-center p-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center mt-4 sm:mt-10 mb-8">
-          You&apos;re doing great! Keep it up!
-        </h1>
-        <div className="w-full max-w-4xl space-y-8">
-          <div className="flex flex-col lg:flex-row w-full lg:space-x-8 space-y-8 lg:space-y-0">
-            <SessionDetailsTable
-              sessionData={sessionData}
-              className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
-            />
-            <TodayDetailsTable
-              sessionData={todayData}
-              className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
-            />
-          </div>
-          <div className="bg-white shadow-md rounded-lg p-6 w-full">
-            <h2 className="text-xl font-bold mb-6">Your 7-Day Summary</h2>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip content={<CustomTooltip />} />
-                <Line type="monotone" dataKey="triggers" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex-grow flex flex-col items-center p-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mt-4 sm:mt-10 mb-8">
+            You&apos;re doing great! Keep it up!
+          </h1>
+          <div className="w-full max-w-4xl space-y-8">
+            <div className="flex flex-col lg:flex-row w-full lg:space-x-8 space-y-8 lg:space-y-0">
+              <SessionDetailsTable
+                sessionData={sessionData}
+                className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
+              />
+              <TodayDetailsTable
+                sessionData={todayData}
+                className="flex-1 w-full lg:w-1/2 rounded-lg shadow-md bg-white"
+              />
+            </div>
+            <div className="bg-white shadow-md rounded-lg p-6 w-full">
+              <h2 className="text-xl font-bold mb-6">Your 7-Day Summary</h2>
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line type="monotone" dataKey="triggers" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>
