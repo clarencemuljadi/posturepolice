@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
 import { logOut } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -24,6 +23,16 @@ const Profile = () => {
 
     return () => unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   return (
     <div>
@@ -69,17 +78,17 @@ const Profile = () => {
                   <span className="text-text-color">SMS alerts activation</span>
                   <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                 </div>
-                <button className="w-full py-2 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold rounded-2xl hover:shadow-md focus:ring focus:ring-cyan-500">
-                  Save
-                </button>
-                <Link to="/Login">
+                <div className="flex items-center justify-center space-x-4">
+                  <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold py-2 px-4 rounded-3xl hover:shadow-md focus:ring focus:ring-blue-400">
+                    Save
+                  </button>
                   <button
-                    className="mt-3 font-semibold text-red-500 hover:underline underline-offset-4 active:text-red-700"
-                    onClick={onSubmit}
+                    className="bg-gradient-to-r from-red-400 to-[#ff5470] text-button-text-color font-semibold py-2 px-4 rounded-3xl hover:shadow-md focus:ring focus:ring-red-400"
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
-                </Link>
+                </div>
               </div>
             </div>
 
