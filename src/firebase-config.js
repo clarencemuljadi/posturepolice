@@ -1,12 +1,17 @@
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc
-} from 'firebase/firestore';
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword, signOut
-} from 'firebase/auth';
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqwQcPQi_fS0QTLEOATgido_IqRHRK7As",
@@ -25,23 +30,32 @@ export const auth = getAuth();
 
 // YYYY-MM-DD
 function getCurrDate() {
-  const options = { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' };
-  const date = new Date().toLocaleDateString('en-CA', options);
+  const options = {
+    timeZone: "Australia/Sydney",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const date = new Date().toLocaleDateString("en-CA", options);
   return date;
 }
 
 function getUserUID() {
   if (!auth) throw new Error("Auth does not exist");
-  return auth.currentUser.uid;
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new Error("currentUser does not exist");
+  const uid = currentUser.uid;
+  if (!uid) throw new Error("UID does not exist");
+  return uid;
 }
 
 function getUserDocRef() {
-  return doc(db, 'users', getUserUID());
+  return doc(db, "users", getUserUID());
 }
 
 async function getUserDoc() {
   const userDoc = await getDoc(getUserDocRef());
-  if (!userDoc.exists) throw new Error("User document does not exist");
+  if (!userDoc.exists) throw new Error("User Document does not exist");
   return userDoc;
 }
 
@@ -57,7 +71,11 @@ export async function startSession() {
       const latestSessionID = sessionIDs[sessionIDs.length - 1];
       const latestSessionData = sessionsToday[latestSessionID];
       if (!latestSessionData.endedAt) {
-        console.log(`An ongoing session already exists for user ${userDoc.data().name}: ${latestSessionID}`);
+        console.log(
+          `An ongoing session already exists for user ${
+            userDoc.data().name
+          }: ${latestSessionID}`
+        );
         return latestSessionID;
       }
     }
@@ -67,7 +85,7 @@ export async function startSession() {
 
     slouchStatistics[getCurrDate()] = {
       ...sessionsToday,
-      [newSessionID]: sessionData
+      [newSessionID]: sessionData,
     };
 
     await updateDoc(getUserDocRef(), { slouchStatistics });
@@ -102,6 +120,16 @@ export async function endSession(slouchCount) {
   }
 }
 
+export async function getTodaySessions() {
+  try {
+    const userDoc = await getUserDoc();
+    const slouchStatistics = userDoc.data().slouchStatistics || {};
+    return slouchStatistics[getCurrDate()] || {};
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // Find the ongoing session (session without endedAt)
 async function getOngoingSession() {
   try {
@@ -124,11 +152,15 @@ async function getOngoingSession() {
 
 export async function signUp(email, password, name) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const uid = userCredential.user.uid;
 
     await setDoc(doc(db, "users", uid), {
-      name
+      name,
     });
 
     return userCredential.user;
@@ -139,19 +171,20 @@ export async function signUp(email, password, name) {
 
 export async function logIn(email, password) {
   signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    return userCredential.user;
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+    .then((userCredential) => {
+      return userCredential.user;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 export async function logOut() {
-  signOut(auth).then(() => {
-    // Sign-out successful.
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful.
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }

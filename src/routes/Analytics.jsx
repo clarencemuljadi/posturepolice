@@ -14,17 +14,14 @@ import TodayDetailsTable from "../components/analytics/TodayDetailsTable";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { auth, getTodaySessions } from "../firebase-config";
 
 function getLastSevenDates() {
-  const dates = [];
-  for (let i = 5; i >= 0; i--) {
+  return Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
-    date.setDate(date.getDate() - i - 1);
-    dates.push(date.toISOString().split("T")[0]);
-  }
-  dates.push("Today");
-  return dates;
+    date.setDate(date.getDate() - i);
+    return date.toISOString().split("T")[0];
+  }).reverse();
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -41,7 +38,13 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Analytics() {
   const [user, setUser] = useState(null);
+  const [chartData, setChartData] = useState([]);
+  const [sessionData, setSessionData] = useState(null);
+  const [todayData, setTodayData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -50,43 +53,100 @@ export default function Analytics() {
       }
     });
     return () => unsubscribe();
-  }, []);
-  const [chartSize, setChartSize] = useState({ width: 500, height: 300 });
-  const dates = [45, 26, 50, 34, 23, 21, 39];
-  const xLabels = getLastSevenDates();
-
-  const sessionData = {
-    duration: 60,
-    badPostureCount: 15,
-    badPosturePerMinute: 15 / 60,
-  };
-
-  const todayData = {
-    duration: 60,
-    badPostureCount: 15,
-    badPosturePerMinute: 15 / 60,
-  };
-
-  const data = xLabels.map((date, index) => ({
-    date,
-    triggers: dates[index],
-  }));
+  }, [navigate]);
 
   useEffect(() => {
-    function handleResize() {
-      setChartSize({
-        width: window.innerWidth * 0.9,
-        height: window.innerHeight * 0.5,
-      });
+    async function fetchData() {
+      if (!user) return; // Don't fetch if user is not authenticated
+
+      setIsLoading(true);
+      setError(null);
+      try {
+        const dates = getLastSevenDates();
+        console.log("Dates to use:", dates);
+
+        // Mock data for the first 6 days
+        const mockData = [
+          { date: dates[0], triggers: 23 },
+          { date: dates[1], triggers: 15 },
+          { date: dates[2], triggers: 32 },
+          { date: dates[3], triggers: 25 },
+          { date: dates[4], triggers: 16 },
+          { date: dates[5], triggers: 12 },
+        ];
+
+        // Fetch real data for today
+        const todaySessions = (await getTodaySessions()) || {};
+        console.log("Today's sessions:", todaySessions);
+
+        let todayCount = 0;
+        let totalDuration = 0;
+        let latestSession = null;
+
+        const sessionsArray = Object.values(todaySessions);
+        if (sessionsArray.length > 0) {
+          for (const session of sessionsArray) {
+            todayCount += session.slouchCount || 0;
+            totalDuration += session.duration || 0;
+
+            // Find the latest session
+            if (
+              !latestSession ||
+              (session.timestamp && session.endedAt > latestSession.timestamp)
+            ) {
+              latestSession = session;
+            }
+          }
+        }
+
+        const data = [...mockData, { date: dates[6], triggers: todayCount }];
+
+        console.log("Final chart data:", data);
+        setChartData(data);
+
+        // Set sessionData (latest session)
+        if (latestSession) {
+          setSessionData({
+            duration: Math.round(latestSession.duration * 100) / 100 || 0,
+            badPostureCount: latestSession.slouchCount || 0,
+            badPosturePerMinute: latestSession.duration
+              ? (latestSession.slouchCount || 0) / (latestSession.duration / 60)
+              : 0,
+          });
+        } else {
+          setSessionData({
+            duration: 0,
+            badPostureCount: 0,
+            badPosturePerMinute: 0,
+          });
+        }
+
+        // Set todayData (cumulated data for today)
+        setTodayData({
+          duration: Math.round(totalDuration * 100) / 100,
+          badPostureCount: todayCount,
+          badPosturePerMinute: totalDuration
+            ? todayCount / (totalDuration / 60)
+            : 0,
+        });
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch data. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
     }
 
-    window.addEventListener("resize", handleResize);
-    handleResize();
+    fetchData();
+  }, [user]); // Depend on user state
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -110,7 +170,7 @@ export default function Analytics() {
             <div className="bg-white shadow-md rounded-lg p-6 w-full">
               <h2 className="text-xl font-bold mb-6">Your 7-Day Summary</h2>
               <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={data}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />

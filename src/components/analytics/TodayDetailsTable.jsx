@@ -10,7 +10,7 @@ const TodayDetailsTable = ({ sessionData, className }) => {
         <div className="bg-gray-50 px-4 py-5 sm:p-6 rounded-lg">
           <dt className="text-sm font-medium text-gray-500">Duration</dt>
           <dd className="mt-1 text-2xl font-semibold text-gray-900">
-            {sessionData.duration} min
+            {sessionData.duration} s
           </dd>
         </div>
         <div className="bg-gray-50 px-4 py-5 sm:p-6 rounded-lg">
@@ -23,7 +23,7 @@ const TodayDetailsTable = ({ sessionData, className }) => {
         </div>
         <div className="bg-gray-50 px-4 py-5 sm:p-6 rounded-lg">
           <dt className="text-sm font-medium text-gray-500">
-            Bad Posture / Minute
+            Bad Posture / Second
           </dt>
           <dd className="mt-1 text-2xl font-semibold text-gray-900">
             {sessionData.badPosturePerMinute.toFixed(2)}
