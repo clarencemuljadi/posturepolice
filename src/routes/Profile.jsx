@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navbar";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   return (
@@ -46,9 +47,14 @@ const Profile = () => {
                   <span className="text-text-color">SMS alerts activation</span>
                   <span className="w-3 h-3 bg-green-500 rounded-full"></span>
                 </div>
-                <button className="w-full py-2 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold rounded-2xl">
+                <button className="w-full py-2 px-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-button-text-color font-semibold rounded-2xl hover:shadow-md focus:ring focus:ring-cyan-500">
                   Save
                 </button>
+                <Link to="/Login">
+                  <button className="mt-3 font-semibold text-red-500 hover:underline underline-offset-4 active:text-red-700">
+                    Logout
+                  </button>
+                </Link>
               </div>
             </div>
 
