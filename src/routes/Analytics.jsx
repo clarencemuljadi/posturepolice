@@ -14,16 +14,15 @@ import TodayDetailsTable from "../components/analytics/TodayDetailsTable";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { auth, getTodaySessions } from "../firebase-config";
 
 function getLastSevenDates() {
   const dates = [];
-  for (let i = 5; i >= 0; i--) {
+  for (let i = 6; i >= 0; i--) {
     const date = new Date();
-    date.setDate(date.getDate() - i - 1);
+    date.setDate(date.getDate() - i);
     dates.push(date.toISOString().split("T")[0]);
   }
-  dates.push("Today");
   return dates;
 }
 
@@ -52,8 +51,12 @@ export default function Analytics() {
     return () => unsubscribe();
   }, []);
   const [chartSize, setChartSize] = useState({ width: 500, height: 300 });
-  const dates = [45, 26, 50, 34, 23, 21, 39];
+  const dates = [];
+
   const xLabels = getLastSevenDates();
+  xLabels.forEach((date) => {
+    dates.push(getTodaySessions(date));
+  });
 
   const sessionData = {
     duration: 60,
