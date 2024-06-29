@@ -5,7 +5,7 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 const Navbar = () => {
   return (
-    <nav className="flex max-w-full justify-between border border-gray-300 px-6 py-4 align-middle shadow-sm">
+    <nav className="flex max-w-full justify-between border-b-2 border-border-color px-6 py-4 align-middle shadow-sm">
       <div className="flex self-center">
         <DrawerExample></DrawerExample>
       </div>

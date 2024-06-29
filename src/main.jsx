@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import Dashboard from "./routes/Dashboard.jsx";
 import Register from "./routes/Register.jsx";
 import Login from "./routes/Login.jsx";
 
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/Dashboard",
-    element: <div>Hello world!</div>,
+    element: <Dashboard></Dashboard>,
   },
 ]);
 
