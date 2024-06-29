@@ -11,6 +11,7 @@ import {
 import SessionDetailsTable from "../components/analytics/SessionDetailsTable";
 import Navbar from "../components/Navbar";
 import TodayDetailsTable from "../components/analytics/TodayDetailsTable";
+import Footer from "../components/Footer";
 
 function getLastSevenDates() {
   const dates = [];
@@ -107,6 +108,7 @@ export default function Analytics() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
