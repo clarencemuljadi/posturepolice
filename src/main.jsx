@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import Analytics from "./routes/Analytics.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import Dashboard from "./routes/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/Dashboard",
-    element: <div>Hello world!</div>,
+    element: <Dashboard></Dashboard>,
   },
 ]);
 
