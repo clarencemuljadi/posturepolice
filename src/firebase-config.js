@@ -56,7 +56,7 @@ function getDateNDaysBefore(daysBefore) {
 }
 
 function getCurrDate() {
-  getDateNDaysBefore(0);
+  return getDateNDaysBefore(0);
 }
 
 export async function startSession() {
