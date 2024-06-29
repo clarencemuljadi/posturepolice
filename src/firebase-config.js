@@ -42,7 +42,9 @@ function getCurrDate() {
 
 function getUserUID() {
   if (!auth) throw new Error("Auth does not exist");
-  return auth.currentUser.uid;
+  const currentUser = auth.currentUser;
+  if (!currentUser) throw new Error("currentUser does not exist");
+  return currentUser.uid;
 }
 
 function getUserDocRef() {
@@ -51,7 +53,7 @@ function getUserDocRef() {
 
 async function getUserDoc() {
   const userDoc = await getDoc(getUserDocRef());
-  if (!userDoc.exists) throw new Error("User document does not exist");
+  if (!userDoc.exists) throw new Error("User Document does not exist");
   return userDoc;
 }
 
