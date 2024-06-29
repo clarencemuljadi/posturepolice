@@ -22,7 +22,7 @@ export default function DrawerExample() {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        <Link to="/profile">
+        <Link to="/Profile">
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
@@ -32,7 +32,7 @@ export default function DrawerExample() {
             </ListItemButton>
           </ListItem>
         </Link>
-        <Link to="/store">
+        <Link to="/Analytics">
           <ListItem disablePadding style={{ marginTop: 2 }}>
             <ListItemButton>
               <ListItemIcon>
@@ -42,7 +42,7 @@ export default function DrawerExample() {
             </ListItemButton>
           </ListItem>
         </Link>
-        <Link to="/login">
+        <Link to="/Logout">
           <ListItem disablePadding style={{ marginTop: 2 }}>
             <ListItemButton>
               <ListItemIcon>
