@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 
 import Checkbox from "@mui/material/Checkbox";
 import Navbar from "../components/Navbar";
-import { signUp, auth} from "../firebase-config";
+import { signUp, auth } from "../firebase-config";
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -34,32 +34,37 @@ const Register = () => {
     userName: "",
     email: "",
     password: "",
-    confirm: ""
+    confirm: "",
   });
-
 
   const onChange = (e) => {
     const { name, value } = e.target;
     setUserDetails((prevDetails) => ({
       ...prevDetails,
-      [name]: value
+      [name]: value,
     }));
-  }
+  };
 
   const onSubmit = async () => {
-    setUser(await signUp(userDetails.email, userDetails.password, userDetails.userName));
-  }
+    setUser(
+      await signUp(
+        userDetails.email,
+        userDetails.password,
+        userDetails.userName
+      )
+    );
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
+      setUser(currentUser);
       if (currentUser) {
-        navigate("/Dashboard")
+        navigate("/Dashboard");
       }
-    })
+    });
 
     return () => unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -76,7 +81,7 @@ const Register = () => {
               label="Full Name"
               variant="outlined"
               onChange={onChange}
-              value = {userDetails.userName}
+              value={userDetails.userName}
             />
             <TextField
               sx={textFieldStyle}
@@ -84,7 +89,7 @@ const Register = () => {
               label="Email Address"
               variant="outlined"
               onChange={onChange}
-              value = {userDetails.email}
+              value={userDetails.email}
             />
             <TextField
               sx={textFieldStyle}
@@ -92,7 +97,7 @@ const Register = () => {
               type="password"
               label="Password"
               variant="outlined"
-              value = {userDetails.password}
+              value={userDetails.password}
               onChange={onChange}
             />
             <TextField
@@ -102,7 +107,7 @@ const Register = () => {
               type="password"
               label="Confirm Password"
               variant="outlined"
-              value = {userDetails.confirm}
+              value={userDetails.confirm}
               onChange={onChange}
             />
           </div>
@@ -132,10 +137,12 @@ const Register = () => {
             <p className="normal-case font-bold text-2xl">Create an account</p>
           </Button>
           <Link to="/Login">
-          <p className="text-xl">
-            Already have an account?{" "}
-            <b className="text-button-color hover:text-blue-900">Login here</b>
-          </p>
+            <p className="text-xl">
+              Already have an account?{" "}
+              <b className="text-button-color hover:text-blue-900">
+                Login here
+              </b>
+            </p>
           </Link>
         </div>
       </div>
