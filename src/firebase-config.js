@@ -28,18 +28,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 export const auth = getAuth();
 
-// YYYY-MM-DD
-function getCurrDate() {
-  const options = {
-    timeZone: "Australia/Sydney",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  const date = new Date().toLocaleDateString("en-CA", options);
-  return date;
-}
-
 function getUserUID() {
   if (!auth) throw new Error("Auth does not exist");
   const currentUser = auth.currentUser;
@@ -57,6 +45,18 @@ async function getUserDoc() {
   const userDoc = await getDoc(getUserDocRef());
   if (!userDoc.exists) throw new Error("User Document does not exist");
   return userDoc;
+}
+
+// YYYY-MM-DD
+function getDateNDaysBefore(daysBefore) {
+  const options = { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const date = new Date();
+  date.setDate(date.getDate() - daysBefore);
+  return date.toLocaleDateString('en-CA', options);
+}
+
+function getCurrDate() {
+  getDateNDaysBefore(0);
 }
 
 export async function startSession() {
