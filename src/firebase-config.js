@@ -21,11 +21,44 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
-const auth = getAuth();
+export const auth = getAuth();
 
 function detectSlouch() {
   const userID = 999;
   logSlouch(userID);
+}
+
+async function startSession(userID) {
+  try {
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    const userDocRef = doc(db, 'users', userID);
+
+    const userDoc = await getDoc(userDocRef);
+    let slouchStatistics = userDoc.data().slouchStatistics || {};
+
+    const sessionsToday = slouchStatistics[currentDate] || {};
+    const latestSessionID = Object.keys(sessionsToday).length;
+    const newSessionID = `session${latestSessionID + 1}`;
+
+    const sessionData = {
+      startedAt: new Date(),
+      endedAt: new Date(),
+      duration: 0,
+      slouchCounts: 0
+    };
+
+    slouchStatistics[currentDate] = {
+      ...sessionsToday,
+      [newSessionID]: sessionData
+    };
+
+    await updateDoc(userDocRef, { slouchStatistics });
+
+    return newSessionID;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function logSlouch(userID) {
@@ -51,23 +84,25 @@ async function logSlouch(userID) {
   }
 }
 
-async function signUp(email, password) {
+export async function signUp(email, password, name) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    const uid = userCredential.user.uid;
 
-    await setDoc(doc(db, "users", user.uid), {
-      email
+    await setDoc(doc(db, "users", uid), {
+      name: name
     });
+
+    return userCredential.user;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function logIn(email, password) {
+export async function logIn(email, password) {
   signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
-    const user = userCredential.user;
+    return userCredential.user;
   })
   .catch((error) => {
     console.error(error);
