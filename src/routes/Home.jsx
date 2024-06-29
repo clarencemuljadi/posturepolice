@@ -38,18 +38,17 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className="bg-slate-100">
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-bground">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-6">
-            Helping you maintain a healthy posture, one sit at a time.
-          </h1>
+      <div className="flex items-start justify-center min-h-screen mt-16">
+        <div className=" flex flex-col justify-start w-6/7 sm:w-3/5 px-5 py-7 mx-5">
+          <h1 class="mb-2 text-4xl font-extrabold leading-none tracking-tight text-head-color md:text-5xl lg:text-6xl">Helping you maintain a healthy posture, one sit at a time.</h1>
+          <p class="mb-3 leading-none text-lg font-normal text-gray-500 lg:text-xl">Sit right, feel right, live right.</p>
           <button
             onClick={handleGetStarted}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out"
+            className="px-6 py-3 w-fit bg-button-color text-white font-semibold rounded-lg shadow-md hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-75 transition duration-300 ease-in-out"
           >
-            Get Started
+            <b>Get Started</b>
           </button>
         </div>
       </div>
