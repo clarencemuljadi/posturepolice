@@ -74,36 +74,43 @@ async function startSession() {
 
 async function endSession() {
   try {
+    const { sessionID, sessionData } = await getOngoingSession();
+
+    const sessionEnd = new Date();
+    const sessionStart = new Date(sessionData.startedAt);
+    const sessionDuration = (sessionEnd - sessionStart) / 1000; // seconds
+
+    sessionData.endedAt = sessionEnd;
+    sessionData.duration = sessionDuration;
+
+    const userDoc = await getDoc(userDocRef);
+    let slouchStatistics = userDoc.data().slouchStatistics || {};
+    let sessionsToday = slouchStatistics[currDate] || {};
+    sessionsToday[sessionID] = sessionData;
+    slouchStatistics[currDate] = sessionsToday;
+
+    await updateDoc(userDocRef, { slouchStatistics });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Find the ongoing session (session without endedAt)
+async function getOngoingSession() {
+  try {
     const userDoc = await getDoc(userDocRef);
     if (!userDoc.exists()) throw new Error("User document does not exist");
 
     let slouchStatistics = userDoc.data().slouchStatistics || {};
     let sessionsToday = slouchStatistics[currDate] || {};
 
-    let ongoingSessionID, sessionData = null;
-
-    // Find the ongoing session (session without endedAt)
     for (const [sessionID, session] of Object.entries(sessionsToday)) {
       if (!session.endedAt) {
-        ongoingSessionID = sessionID;
-        sessionData = session;
-        break;
+        return { sessionID, sessionData: session };
       }
     }
 
-    if (!ongoingSessionID) throw new Error("No ongoing session found for today");
-
-    const sessionEnd = new Date();
-    const sessionStart = sessionData.startedAt.toDate();
-    const sessionDuration = (sessionEnd - sessionStart) / 1000; // seconds
-
-    sessionData.endedAt = sessionEnd;
-    sessionData.duration = sessionDuration;
-
-    sessionsToday[ongoingSessionID] = sessionData;
-    slouchStatistics[currDate] = sessionsToday;
-
-    await updateDoc(userDocRef, { slouchStatistics });
+    throw new Error("No ongoing session found for today");
   } catch (error) {
     console.error(error);
   }
