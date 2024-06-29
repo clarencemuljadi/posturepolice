@@ -29,13 +29,19 @@ const currentUser = auth.currentUser;
 const userUID = currentUser.uid;
 const userDocRef = doc(db, 'users', userUID);
 
+export async function getUserDoc() {
+  const userDoc = await getDoc(userDocRef);
+  if (!userDoc.exists()) throw new Error("User document does not exist");
+  return userDoc;
+}
+
 function detectSlouch() {
 
 }
 
 async function startSession() {
   try {
-    const userDoc = await getDoc(userDocRef);
+    const userDoc = getUserDoc();
 
     let slouchStatistics = userDoc.data().slouchStatistics || {};
 
@@ -83,7 +89,7 @@ async function endSession() {
     sessionData.endedAt = sessionEnd;
     sessionData.duration = sessionDuration;
 
-    const userDoc = await getDoc(userDocRef);
+    const userDoc = getUserDoc();
     let slouchStatistics = userDoc.data().slouchStatistics || {};
     let sessionsToday = slouchStatistics[currDate] || {};
     sessionsToday[sessionID] = sessionData;
@@ -98,7 +104,7 @@ async function endSession() {
 // Find the ongoing session (session without endedAt)
 async function getOngoingSession() {
   try {
-    const userDoc = await getDoc(userDocRef);
+    const userDoc = getUserDoc();
     if (!userDoc.exists()) throw new Error("User document does not exist");
 
     let slouchStatistics = userDoc.data().slouchStatistics || {};
