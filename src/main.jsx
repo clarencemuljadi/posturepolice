@@ -2,18 +2,28 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import Analytics from "./routes/Analytics.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import "./index.css";
 import Dashboard from "./routes/Dashboard.jsx";
+import Register from "./routes/Register.jsx";
+import Login from "./routes/Login.jsx";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Navigate to="/Dashboard" />,
+  },
+  {
     path: "/Login",
-    element: <div>Hello world!</div>,
+    element: <Login></Login>,
   },
   {
     path: "/Register",
-    element: <div>Hello world!</div>,
+    element: <Register></Register>,
   },
   {
     path: "/Analytics",

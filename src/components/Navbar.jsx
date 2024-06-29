@@ -16,14 +16,14 @@ const Navbar = () => {
               Posture Police
             </h1>
             <LocalHospitalIcon
-              sx={{ fontSize: 35, color: "#ef4565" }}
+              sx={{ fontSize: 38, color: "#ef4565" }}
             ></LocalHospitalIcon>
           </div>
         </Link>
       </div>
       <div className="flex items-center justify-between my-auto">
         <div className="gap-6 hidden md:flex">
-          <Link to="/profile">
+          <Link to="/Profile">
             <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
               <p
                 className="text-lg font-bold  text-head-color
@@ -36,13 +36,13 @@ const Navbar = () => {
               </div>
             </div>
           </Link>
-          <Link to="/login">
+          <Link to="/Analytics">
             <div className="flex gap-2 p-1 hover:bg-slate-50 rounded-md">
               <p
                 className="text-lg font-bold text-head-color
               "
               >
-                Login
+                Analytics
               </p>
               <div>
                 <AnalyticsIcon sx={{ color: "#3da9fc" }}></AnalyticsIcon>
