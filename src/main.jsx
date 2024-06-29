@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import Analytics from "./routes/Analytics.jsx";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
 import "./index.css";
-import { Profile } from "./routes/Profile.jsx";
+import Analytics from "./routes/Analytics.jsx";
+import Profile from "./routes/Profile.jsx";
 
 const router = createBrowserRouter([
   {
