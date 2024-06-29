@@ -2,6 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import * as faceapi from "@vladmandic/face-api";
 import TimerBox from "../components/TimerBox";
+import slouching from "../assets/Slouching-8.svg";
+import perfect from "../assets/Slouching-14.svg";
+import close from "../assets/Slouching-15.svg";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -9,13 +12,40 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Dashboard() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [posture, setPosture] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [expression, setExpression] = useState("");
+  const [prevPosture, setPrevPosture] = useState("");
+  const [postureCount, setPostureCount] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState("");
+  const [badPostureCount, setBadPostureCount] = useState(0);
   const navigate = useNavigate();
 
   const modelPath = "../model/";
   const minScore = 0.2;
   const maxResults = 5;
   let optionsSSDMobileNet;
+
+  const reset = () => {
+    setPosture("");
+    setExpression("");
+    setPrevPosture("");
+    setPostureCount(0);
+    badPostureCount(0);
+  };
+
+  const getPostureSVG = () => {
+    switch (currentPosition) {
+      case "normal":
+        return <img src={perfect} alt="Normal Posture" />;
+      case "slouching":
+        return <img src={slouching} alt="Slouching Posture" />;
+      case "faceClose":
+        return <img src={close} alt="Face Close Posture" />;
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     const auth = getAuth();
@@ -38,6 +68,30 @@ function Dashboard() {
     await setupCamera();
   };
 
+  const checkPosture = async () => {
+    if (isPlaying) {
+      if (prevPosture !== posture) {
+        setPrevPosture(posture);
+        setPostureCount(0);
+      } else {
+        setPostureCount((prevCount) => prevCount + 1);
+        if (postureCount >= 2) {
+          setCurrentPosition(posture);
+          if (posture == "slouching" || posture == "faceClose") {
+            setBadPostureCount((prevCount) => prevCount + 1);
+          }
+          console.log("bad posture count: " + badPostureCount);
+          console.log("Maintained posture: " + posture + " for 3 seconds");
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(checkPosture, 1000);
+    return () => clearInterval(interval);
+  }, [isPlaying, posture, prevPosture, postureCount]);
+
   // helper function to pretty-print json object to string
   function str(json) {
     let text = '<font color="lightblue">';
@@ -54,6 +108,28 @@ function Dashboard() {
   function log(...txt) {
     console.log(...txt); // eslint-disable-line no-console
   }
+
+  const detectPosture = (person) => {
+    if (
+      person.angle.roll >= -3 &&
+      person.angle.roll <= 1 &&
+      person.angle.pitch >= -5 &&
+      person.angle.pitch <= 13
+    ) {
+      console.log("normal");
+      setPosture("normal");
+    } else if (
+      person.angle.roll >= -3 &&
+      person.angle.roll <= 0 &&
+      person.angle.pitch <= -5
+    ) {
+      console.log("slouching");
+      setPosture("slouching");
+    } else if (person.angle.yaw < -40 && person.angle.pitch < -10) {
+      console.log("faceCLose");
+      setPosture("faceClose");
+    }
+  };
 
   // helper function to draw detected faces
   function drawFaces(canvas, data, fps) {
@@ -80,79 +156,11 @@ function Dashboard() {
       ctx.stroke();
       ctx.globalAlpha = 1;
       // draw text labels
-      if (person.angle.pitch < -10) {
-        console.log("slouching");
-      } else if (person.angle.yaw < -40) {
-        console.log("face too close");
-      }
+      detectPosture(person);
       const expression = Object.entries(person.expressions).sort(
         (a, b) => b[1] - a[1]
       );
-      ctx.fillStyle = "black";
-      ctx.fillText(
-        `gender: ${Math.round(100 * person.genderProbability)}% ${
-          person.gender
-        }`,
-        person.detection.box.x,
-        person.detection.box.y - 59
-      );
-      ctx.fillText(
-        `expression: ${Math.round(100 * expression[0][1])}% ${
-          expression[0][0]
-        }`,
-        person.detection.box.x,
-        person.detection.box.y - 41
-      );
-      ctx.fillText(
-        `age: ${Math.round(person.age)} years`,
-        person.detection.box.x,
-        person.detection.box.y - 23
-      );
-      ctx.fillText(
-        `roll:${person.angle.roll}° pitch:${person.angle.pitch}° yaw:${person.angle.yaw}°`,
-        person.detection.box.x,
-        person.detection.box.y - 5
-      );
-      ctx.fillStyle = "lightblue";
-      ctx.fillText(
-        `gender: ${Math.round(100 * person.genderProbability)}% ${
-          person.gender
-        }`,
-        person.detection.box.x,
-        person.detection.box.y - 60
-      );
-      ctx.fillText(
-        `expression: ${Math.round(100 * expression[0][1])}% ${
-          expression[0][0]
-        }`,
-        person.detection.box.x,
-        person.detection.box.y - 42
-      );
-      ctx.fillText(
-        `age: ${Math.round(person.age)} years`,
-        person.detection.box.x,
-        person.detection.box.y - 24
-      );
-      ctx.fillText(
-        `roll:${person.angle.roll}° pitch:${person.angle.pitch}° yaw:${person.angle.yaw}°`,
-        person.detection.box.x,
-        person.detection.box.y - 6
-      );
-      // draw face points for each face
-      ctx.globalAlpha = 0.8;
-      ctx.fillStyle = "lightblue";
-      const pointSize = 2;
-      for (let i = 0; i < person.landmarks.positions.length; i++) {
-        ctx.beginPath();
-        ctx.arc(
-          person.landmarks.positions[i].x,
-          person.landmarks.positions[i].y,
-          pointSize,
-          0,
-          2 * Math.PI
-        );
-        ctx.fill();
-      }
+      setExpression(expression[0][0]);
     }
   }
 
@@ -246,11 +254,21 @@ function Dashboard() {
       <Navbar></Navbar>
       <div className="bg-gray-100 min-h-screen flex flex-col">
         <div className="flex h-full p-8 justify-between gap-4 px-14">
-          <div className="border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl">
-            <TimerBox onVideo={togglePlayPause}></TimerBox>
+          <div className="border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl ">
+            <TimerBox onVideo={togglePlayPause} onReset={reset}></TimerBox>
           </div>
           <div className="flex flex-col border-4 border-border-color w-6/12 rounded-lg p-6 mt-4 bg-white shadow-xl">
-            <h1 className="text-4xl font-semibold">Your Current Position:</h1>
+            <h1 className="text-4xl font-semibold text-center">
+              Your Current Position:
+            </h1>
+            {getPostureSVG()}
+          </div>
+        </div>
+        <div className="px-14">
+          <div className="flex flex-col  border-4 border-border-color w-full rounded-lg p-6 bg-white shadow-xl">
+            <h1 className="text-4xl font-semibold text-center">
+              Your Current Expression:
+            </h1>
           </div>
         </div>
         <div className="appvideo hidden">
