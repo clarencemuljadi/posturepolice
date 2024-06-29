@@ -44,7 +44,9 @@ function getUserUID() {
   if (!auth) throw new Error("Auth does not exist");
   const currentUser = auth.currentUser;
   if (!currentUser) throw new Error("currentUser does not exist");
-  return currentUser.uid;
+  const uid = currentUser.uid;
+  if (!uid) throw new Error("UID does not exist");
+  return uid;
 }
 
 function getUserDocRef() {
